@@ -1,0 +1,10 @@
+name: ManHunt
+version: ${project.version}
+main: cc.zjlsx.manhunt.Main
+authors: [ zjls ]
+description: 猎人
+softdepend:
+  - MultiWorld
+commands:
+  manhunt:
+    aliases: [ mh ]

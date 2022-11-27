@@ -27,13 +27,13 @@ public abstract class BaseCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!commandInfo.permission().getPermission().isEmpty()) {
             if (!sender.hasPermission(commandInfo.permission().getPermission())) {
-                sender.sendMessage(Messages.No_Permission.getMessage());
+                sender.sendMessage(Messages.No_Permission.get());
                 return true;
             }
         }
         if (commandInfo.requiresPlayer()) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(Messages.Run_In_Console.getMessage());
+                sender.sendMessage(Messages.Run_In_Console.get());
                 return true;
             }
             execute((Player) sender, args);

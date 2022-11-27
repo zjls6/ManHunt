@@ -12,7 +12,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 public class BlockUpdate implements Listener {
 
-    private GameManager gameManager;
+    private final GameManager gameManager;
 
     public BlockUpdate(GameManager gameManager) {
         this.gameManager = gameManager;
@@ -29,7 +29,7 @@ public class BlockUpdate implements Listener {
         }
         if (gameManager.getState().equals(GameState.Active)) {
             if (gameManager.getPlayerManager().getTeam(p).equals(Team.Hunter)) {
-                if (gameManager.getGameTickTask().getCurrentSecond() <= gameManager.getHunterReleaseTime()  ) {
+                if (gameManager.getGameTickTask().getCurrentSecond() <= gameManager.getPlugin().getConfigManager().getHunterReleaseTime()  ) {
                     e.setCancelled(true);
                 }
             }
@@ -47,4 +47,3 @@ public class BlockUpdate implements Listener {
         }
     }
 }
-

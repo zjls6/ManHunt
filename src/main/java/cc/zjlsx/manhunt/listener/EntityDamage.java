@@ -36,15 +36,13 @@ public class EntityDamage implements Listener {
     @EventHandler (priority = EventPriority.MONITOR)
     public void onEntityDamage(EntityDamageByEntityEvent e) {
         if (gameManager.getState().equals(GameState.Active)) {
-            if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
-                Player player = (Player) e.getEntity();
-                Player damager = (Player) e.getDamager();
+            if (e.getEntity() instanceof Player player && e.getDamager() instanceof Player damager) {
                 if (playerManager.getTeam(player).equals(playerManager.getTeam(damager))) {
                     e.setCancelled(true);
                     return;
                 }
                 int currentSecond = gameManager.getGameTickTask().getCurrentSecond();
-                if (currentSecond < gameManager.getPvpOnTime()) {
+                if (currentSecond < gameManager.getPlugin().getConfigManager().getPvpOnTime()) {
                     e.setCancelled(true);
                 }
             }

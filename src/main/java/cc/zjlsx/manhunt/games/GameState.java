@@ -44,12 +44,12 @@ public enum GameState {
                         gameManager.getPlayerManager().getRunners().add(player.getUniqueId());
                     }
                 }
-                for (int i = 0; i < gameManager.getPlayerManager().getHunters().size(); i++) {
-                    gameManager.getPlayerManager().getInGamePlayers().put(gameManager.getPlayerManager().getHunters().get(i), i);
-                }
-                for (int i = 0; i < gameManager.getPlayerManager().getRunners().size(); i++) {
-                    gameManager.getPlayerManager().getInGamePlayers().put(gameManager.getPlayerManager().getRunners().get(i), i + gameManager.getPlayerManager().getHunters().size());
-                }
+//                for (int i = 0; i < gameManager.getPlayerManager().getHunters().size(); i++) {
+//                    gameManager.getPlayerManager().getInGamePlayers().put(gameManager.getPlayerManager().getHunters().get(i), i);
+//                }
+//                for (int i = 0; i < gameManager.getPlayerManager().getRunners().size(); i++) {
+//                    gameManager.getPlayerManager().getInGamePlayers().put(gameManager.getPlayerManager().getRunners().get(i), i + gameManager.getPlayerManager().getHunters().size());
+//                }
                 for (UUID uuid : gameManager.getPlayerManager().getRunners()) {
                     Player runner = Bukkit.getPlayer(uuid);
                     if (runner == null) {

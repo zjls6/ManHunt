@@ -12,16 +12,13 @@ import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.checkerframework.checker.units.qual.A;
 
 import java.util.*;
 
 @Getter
 public class PlayerManager {
 
-    private GameManager gameManager;
+    private final GameManager gameManager;
     private ConfigManager configManager;
 
     private int maxHunter;
@@ -48,9 +45,9 @@ public class PlayerManager {
         p.getInventory().clear();
         if (getTeam(p).equals(Team.Hunter)) {
             for (String message : gameManager.getMessages().getStringList("gameStart.hunter")) {
-                p.sendMessage(Color.str(message).replace("%time%", String.valueOf(gameManager.getHunterReleaseTime())));
+//                p.sendMessage(Color.str(message).replace("%time%", String.valueOf(gameManager.getHunterReleaseTime())));
             }
-            p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * gameManager.getHunterReleaseTime(), 1, false, false));
+//            p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * gameManager.getHunterReleaseTime(), 1, false, false));
         } else if (getTeam(p).equals(Team.Runner)) {
             for (String message : gameManager.getMessages().getStringList("gameStart.runner")) {
                 p.sendMessage(Color.str(message));

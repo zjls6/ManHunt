@@ -95,7 +95,7 @@ public class GamePlayer implements IGamePlayer {
         public void setPlaying() {
             getPlayer().sendMessage(Messages.Game_Start_Hunter.get(configManager.getHunterReleaseTime()));
             getPlayer().addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 20 * configManager.getHunterReleaseTime(), 1, false, false));
-            super.setPlaying();
+//            super.setPlaying();
         }
 
         @Override
@@ -131,6 +131,7 @@ public class GamePlayer implements IGamePlayer {
 
         @Override
         public void setPlaying() {
+            getPlayer().sendMessage(Messages.Game_Start_Runner.get());
             super.setPlaying();
         }
 
@@ -163,6 +164,7 @@ public class GamePlayer implements IGamePlayer {
 
         @Override
         public void setPlaying() {
+            getPlayer().setGameMode(GameMode.SPECTATOR);
             super.setPlaying();
         }
     }

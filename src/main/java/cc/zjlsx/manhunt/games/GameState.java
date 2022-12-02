@@ -45,10 +45,10 @@ public enum GameState {
                     }
                 }
 //                for (int i = 0; i < gameManager.getPlayerManager().getHunters().size(); i++) {
-//                    gameManager.getPlayerManager().getInGamePlayers().put(gameManager.getPlayerManager().getHunters().get(i), i);
+//                    gameManager.getPlayerManager().getInGamePlayers().put(gameManager.getPlayerManager().getHunters().getMessage(i), i);
 //                }
 //                for (int i = 0; i < gameManager.getPlayerManager().getRunners().size(); i++) {
-//                    gameManager.getPlayerManager().getInGamePlayers().put(gameManager.getPlayerManager().getRunners().get(i), i + gameManager.getPlayerManager().getHunters().size());
+//                    gameManager.getPlayerManager().getInGamePlayers().put(gameManager.getPlayerManager().getRunners().getMessage(i), i + gameManager.getPlayerManager().getHunters().size());
 //                }
                 for (UUID uuid : gameManager.getPlayerManager().getRunners()) {
                     Player runner = Bukkit.getPlayer(uuid);

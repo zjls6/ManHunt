@@ -25,9 +25,9 @@ public enum Team {
 
     public String getName() {
         return switch (this) {
-            case Hunter -> Messages.Hunter_Name.get();
-            case Runner -> Messages.Runner_Name.get();
-            case Spectator -> Messages.Spectator_Name.get();
+            case Hunter -> Messages.Hunter_Name.getMessage();
+            case Runner -> Messages.Runner_Name.getMessage();
+            case Spectator -> Messages.Spectator_Name.getMessage();
         };
     }
 }

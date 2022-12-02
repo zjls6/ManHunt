@@ -3,6 +3,7 @@ package cc.zjlsx.manhunt.games;
 import cc.zjlsx.manhunt.Main;
 import cc.zjlsx.manhunt.data.ConfigManager;
 import cc.zjlsx.manhunt.files.MessageManager;
+import cc.zjlsx.manhunt.models.base.GamePlayer;
 import cc.zjlsx.manhunt.player.PlayerManager;
 import cc.zjlsx.manhunt.tasks.GameStarting;
 import cc.zjlsx.manhunt.tasks.GameTick;
@@ -29,7 +30,6 @@ public class GameManager {
     private boolean configurationComplete = true;
 
     private PlayerManager playerManager;
-    private MessageManager messageManager;
 
     private Location waitingLobbyLocation;
 
@@ -57,7 +57,6 @@ public class GameManager {
         }
         this.waitingLobbyLocation = waitingLobbyLocation;
         this.playerManager = new PlayerManager(this);
-        this.messageManager = new MessageManager(plugin);
 
         this.scoreboard = new JPerPlayerScoreboard(
                 (player) -> "&e&l猎人游戏",
@@ -66,118 +65,54 @@ public class GameManager {
                     String sd = sdf.format(new Date());
 
                     List<String> lines = new ArrayList<>();
-                    if (getState().equals(GameState.Waiting)) {
-                        lines.add("&7" + sd);
-                        lines.add("");
-                        lines.add("&f玩家： &6" + Bukkit.getOnlinePlayers().size() + "&7/&a" + playerManager.getMaxPlayer());
-                        lines.add("");
-                        lines.add("&f等待中...");
-                        lines.add("");
-                        lines.add("&f模式： &a" + playerManager.getMaxRunner() + "v" + playerManager.getMaxHunter());
-                        lines.add("");
-                        lines.add("&ezjlsx.slot");
-                    } else if (getState().equals(GameState.Starting)) {
-                        lines.add("&7" + sd);
-                        lines.add("");
-                        lines.add("&f玩家： &6" + Bukkit.getOnlinePlayers().size() + "&7/&a" + playerManager.getMaxPlayer());
-                        lines.add("");
-                        lines.add("&f即将开始：&a" + gameStartingTask.getTime() + " 秒");
-                        lines.add("");
-                        lines.add("&f模式： &a" + playerManager.getMaxRunner() + "v" + playerManager.getMaxHunter());
-                        lines.add("");
-                        lines.add("&ezjlsx.slot");
-                    } else if (getState().equals(GameState.Active)) {
-                        int currentSecond = gameTickTask.getCurrentSecond();
-                        lines.add("&7" + sd);
-                        lines.add("");
-                        lines.add("&a下个事件：");
-                        if (currentSecond < configManager.getHunterReleaseTime()) {
-                            lines.add("&c猎人释放 &7- &a" + getDate(configManager.getHunterReleaseTime() - currentSecond));
-                        } else if (currentSecond < configManager.getPvpOnTime()) {
-                            lines.add("&cPVP开启 &7- &a" + getDate(configManager.getPvpOnTime() - currentSecond));
-                        } else {
-                            lines.add("&e游戏结束 &7- &a" + getDate(configManager.getGameEndTime() - currentSecond));
+                    switch (state) {
+                        case Waiting -> {
+                            lines.add("&7" + sd);
+                            lines.add("");
+                            lines.add("&f玩家： &6" + Bukkit.getOnlinePlayers().size() + "&7/&a" + playerManager.getMaxPlayer());
+                            lines.add("");
+                            lines.add("&f等待中...");
+                            lines.add("");
+                            lines.add("&f模式： &a" + playerManager.getMaxRunner() + "v" + playerManager.getMaxHunter());
                         }
-                        lines.add("");
-                        if (currentSecond > configManager.getHunterReleaseTime()) {
-                            lines.add("&a追踪： " + playerManager.getOppositeTeam(player).getName());
-                            if (playerManager.getTeam(player).equals(Team.Hunter)) {
-                                for (UUID uuid : playerManager.getRunners()) {
-                                    Player runner = Bukkit.getPlayer(uuid);
-                                    if (runner == null) {
-                                        lines.add("玩家不在线");
-                                    } else {
-                                        if (runner.isDead()) {
-                                            lines.add("&6" + runner.getName() + " &c等待复活");
-                                        } else {
-                                            if (!runner.getWorld().getName().equals(player.getWorld().getName())) {
-                                                lines.add("&6" + runner.getName() + " &c不在同一世界");
-                                            } else {
-                                                lines.add("&6" + runner.getName() + " &b" + (int) Math.round(player.getLocation().distance(runner.getLocation())) + "m");
-                                            }
-                                        }
-
-                                    }
-                                }
-                                if (playerManager.getHunters().size() > 1) {
-                                    lines.add("&a追踪&7： &2队友");
-                                    for (UUID uuid : playerManager.getHunters()) {
-                                        Player hunter = Bukkit.getPlayer(uuid);
-                                        if (player.equals(hunter)) {
-                                            continue;
-                                        }
-                                        if (hunter == null) {
-                                            lines.add("&c玩家不在线");
-                                        } else {
-                                            if (hunter.isDead()) {
-                                                lines.add("&6" + hunter.getName() + " &c等待复活");
-                                            } else {
-                                                if (!hunter.getWorld().getName().equals(player.getWorld().getName())) {
-                                                    lines.add("&6" + hunter.getName() + " &c不在同一世界");
-                                                } else {
-                                                    lines.add("&6" + hunter.getName() + " &b" + (int) Math.round(player.getLocation().distance(hunter.getLocation())) + "m");
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                                lines.add("");
-                                lines.add("&a死亡： &c" + playerManager.getPlayerDeathCount().getOrDefault(player.getUniqueId(), 0));
+                        case Starting -> {
+                            lines.add("&7" + sd);
+                            lines.add("");
+                            lines.add("&f玩家： &6" + Bukkit.getOnlinePlayers().size() + "&7/&a" + playerManager.getMaxPlayer());
+                            lines.add("");
+                            lines.add("&f即将开始：&a" + gameStartingTask.getTime() + " 秒");
+                            lines.add("");
+                            lines.add("&f模式： &a" + playerManager.getMaxRunner() + "v" + playerManager.getMaxHunter());
+                        }
+                        case Active -> {
+                            int currentSecond = gameTickTask.getCurrentSecond();
+                            lines.add("&7" + sd);
+                            lines.add("");
+                            lines.add("&a下个事件：");
+                            if (currentSecond < configManager.getHunterReleaseTime()) {
+                                lines.add("&c猎人释放 &7- &a" + getDate(configManager.getHunterReleaseTime() - currentSecond));
+                            } else if (currentSecond < configManager.getPvpOnTime()) {
+                                lines.add("&cPVP开启 &7- &a" + getDate(configManager.getPvpOnTime() - currentSecond));
                             } else {
-                                for (UUID uuid : playerManager.getHunters()) {
-                                    Player hunter = Bukkit.getPlayer(uuid);
-                                    if (hunter == null) {
-                                        lines.add("&c玩家不在线");
-                                    } else {
-                                        if (hunter.isDead()) {
-                                            lines.add("&6" + hunter.getName() + " &c等待复活");
-                                        } else {
-                                            if (!hunter.getWorld().getName().equals(player.getWorld().getName())) {
-                                                lines.add("&6" + hunter.getName() + " &c不在同一世界");
-                                            } else {
-                                                lines.add("&6" + hunter.getName() + " &b" + (int) Math.round(player.getLocation().distance(hunter.getLocation())) + "m");
-                                            }
-                                        }
-                                    }
-                                }
-                                lines.add("");
-                                lines.add("&a击杀： &c" + playerManager.getPlayerKillCount().getOrDefault(player.getUniqueId(), 0));
+                                lines.add("&e游戏结束 &7- &a" + getDate(configManager.getGameEndTime() - currentSecond));
                             }
+                            lines.add("");
+                            if (currentSecond > configManager.getHunterReleaseTime()) {
+                                playerManager.getGamePlayer(player).ifPresent(gamePlayer -> lines.addAll(gamePlayer.getScoreboardLines()));
+                            }
+                            lines.add("");
+                            lines.add("&a时间： &f" + getDate(currentSecond));
                         }
-                        lines.add("");
-                        lines.add("&a时间： &f" + getDate(currentSecond));
-                        lines.add("");
-
-                        lines.add("&ezjlsx.cc");
-                    } else {
-                        lines.add("&7" + sd);
-                        lines.add("");
-                        lines.add("&6游戏结束！");
-                        lines.add("");
-                        lines.add(winnerTeam.getName() + " &a胜利！");
-                        lines.add("");
-                        lines.add("&ezjlsx.cc");
+                        default -> {
+                            lines.add("&7" + sd);
+                            lines.add("");
+                            lines.add("&6游戏结束！");
+                            lines.add("");
+                            lines.add(winnerTeam.getName() + " &a胜利！");
+                        }
                     }
+                    lines.add("");
+                    lines.add("&ezjlsx.cc");
                     return lines;
                 }
         );
@@ -215,10 +150,10 @@ public class GameManager {
                     }
                 }
 //                for (int i = 0; i < playerManager.getHunters().size(); i++) {
-//                    playerManager.getInGamePlayers().put(playerManager.getHunters().get(i), i);
+//                    playerManager.getInGamePlayers().put(playerManager.getHunters().getMessage(i), i);
 //                }
 //                for (int i = 0; i < playerManager.getRunners().size(); i++) {
-//                    playerManager.getInGamePlayers().put(playerManager.getRunners().get(i), i + playerManager.getHunters().size());
+//                    playerManager.getInGamePlayers().put(playerManager.getRunners().getMessage(i), i + playerManager.getHunters().size());
 //                }
                 for (UUID uuid : playerManager.getRunners()) {
                     Player runner = Bukkit.getPlayer(uuid);
@@ -274,6 +209,9 @@ public class GameManager {
             }
         }
     }
+    public boolean isAtAnyState(GameState... gameStates) {
+        return Arrays.stream(gameStates).anyMatch(gameState -> state.equals(gameState));
+    }
 
     public void endGame(Player winner) {
         this.state = GameState.End;
@@ -284,14 +222,14 @@ public class GameManager {
             return;
         }
         this.winnerTeam = team;
-        Bukkit.broadcastMessage(Color.str("&6游戏结束，" + team.getName() + " &a获得胜利！"));
+        Bukkit.broadcastMessage(Color.s("&6游戏结束，" + team.getName() + " &a获得胜利！"));
     }
 
     public void endGame(Team team) {
         this.state = GameState.End;
         setState(GameState.End);
         this.winnerTeam = team;
-        Bukkit.broadcastMessage(Color.str("&6游戏结束，" + team.getName() + " &a获得胜利！"));
+        Bukkit.broadcastMessage(Color.s("&6游戏结束，" + team.getName() + " &a获得胜利！"));
     }
 
     public FileConfiguration getMessages() {

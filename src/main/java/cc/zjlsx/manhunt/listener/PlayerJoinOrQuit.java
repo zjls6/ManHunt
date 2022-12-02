@@ -1,6 +1,7 @@
 package cc.zjlsx.manhunt.listener;
 
 import cc.zjlsx.manhunt.Main;
+import cc.zjlsx.manhunt.enums.Messages;
 import cc.zjlsx.manhunt.games.GameManager;
 import cc.zjlsx.manhunt.games.GameState;
 import cc.zjlsx.manhunt.player.PlayerManager;
@@ -34,9 +35,9 @@ public class PlayerJoinOrQuit implements Listener {
     public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
         if (!gameManager.isConfigurationComplete()) {
-            player.sendMessage(Color.str("&e游戏似乎未配置好，您可以选择进行以下操作："));
-            TextComponent setWaitingLobbyLocation = new TextComponent(Color.str("&a设置等待大厅出生点"));
-            setWaitingLobbyLocation.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(Color.str("&7点击将当前位置设置为等待大厅出生点"))));
+            player.sendMessage(Color.s("&e游戏似乎未配置好，您可以选择进行以下操作："));
+            TextComponent setWaitingLobbyLocation = new TextComponent(Color.s("&a设置等待大厅出生点"));
+            setWaitingLobbyLocation.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(Color.s("&7点击将当前位置设置为等待大厅出生点"))));
             setWaitingLobbyLocation.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/hunter setWaitingLobby"));
 
             player.spigot().sendMessage(setWaitingLobbyLocation);
@@ -44,16 +45,18 @@ public class PlayerJoinOrQuit implements Listener {
         }
         gameManager.getScoreboard().addPlayer(player);
         gameManager.getScoreboard().updateScoreboard();
-        if (gameManager.getState().equals(GameState.Waiting) || gameManager.getState().equals(GameState.Starting)) {
+        if (gameManager.isAtAnyState(GameState.Waiting, GameState.Starting)) {
             player.teleport(gameManager.getWaitingLobbyLocation());
-//        e.setJoinMessage(Color.str("&f&l" + player.getDisplayName() + " &e加入了游戏！ &7(&6"
+//        e.setJoinMessage(Color.s("&f&l" + player.getDisplayName() + " &e加入了游戏！ &7(&6"
 //                + Bukkit.getOnlinePlayers().size() + "&7/&a2&7)"));
             PlayerManager playerManager = gameManager.getPlayerManager();
 
-            e.setJoinMessage(Color.str(gameManager.getMessages().getString("join.message"))
-                    .replace("%playerName%", player.getName())
-                    .replace("%onlinePlayers%", String.valueOf(Bukkit.getOnlinePlayers().size()))
-                    .replace("%maxPlayers%", String.valueOf(playerManager.getMaxPlayer())));
+            plugin.onlinePlayers().sendMessage(Messages.Player_Join.get("playerName", player.getName(),
+                    "onlinePlayers", Bukkit.getOnlinePlayers().size(), "maxPlayers", playerManager.getMaxPlayer()));
+//            e.setJoinMessage(Messages.Player_Join.get()
+//                    .replace("%playerName%", player.getName())
+//                    .replace("%onlinePlayers%", String.valueOf(Bukkit.getOnlinePlayers().size()))
+//                    .replace("%maxPlayers%", String.valueOf(playerManager.getMaxPlayer())));
 
             player.setHealth(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
             player.setFoodLevel(20);
@@ -63,7 +66,7 @@ public class PlayerJoinOrQuit implements Listener {
             player.setLevel(0);
             player.setExp(0);
 
-            player.getInventory().addItem(new ItemBuilder(Material.COMPASS).setName(Color.str("&r选择队伍 &7(右键点击)")).toItemStack());
+            player.getInventory().addItem(new ItemBuilder(Material.COMPASS).setName(Color.s("&r选择队伍 &7(右键点击)")).toItemStack());
 
             if (gameManager.getState().equals(GameState.Waiting)) {
                 if (Bukkit.getOnlinePlayers().size() == playerManager.getMaxPlayer()) {

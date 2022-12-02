@@ -1,7 +1,9 @@
 package cc.zjlsx.manhunt.listener;
 
+import cc.zjlsx.manhunt.Main;
 import cc.zjlsx.manhunt.games.GameManager;
 import cc.zjlsx.manhunt.games.Team;
+import cc.zjlsx.manhunt.player.PlayerManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -12,18 +14,20 @@ import java.util.UUID;
 
 public class PlayerMove implements Listener {
 
-    private GameManager gameManager;
+    private final GameManager gameManager;
+    private final PlayerManager playerManager;
 
-    public PlayerMove(GameManager gameManager) {
-        this.gameManager = gameManager;
+    public PlayerMove(Main plugin) {
+        this.gameManager = plugin.getGameManager();
+        playerManager = gameManager.getPlayerManager();
     }
 
     @EventHandler
-    public void onMove(PlayerMoveEvent e){
+    public void onMove(PlayerMoveEvent e) {
         Player p = e.getPlayer();
 
-        if (gameManager.getPlayerManager().getTeam(p).equals(Team.Runner)) {
-            for (UUID uuid : gameManager.getPlayerManager().getHunters()) {
+        if (playerManager.getTeam(p).equals(Team.Runner)) {
+            for (UUID uuid : playerManager.getHunters()) {
                 Player hunter = Bukkit.getPlayer(uuid);
                 if (hunter == null) {
                     return;

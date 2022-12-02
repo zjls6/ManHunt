@@ -3,6 +3,7 @@ package cc.zjlsx.manhunt.tasks;
 import cc.zjlsx.manhunt.Main;
 import cc.zjlsx.manhunt.data.ConfigManager;
 import cc.zjlsx.manhunt.games.GameManager;
+import cc.zjlsx.manhunt.games.GameState;
 import cc.zjlsx.manhunt.games.Team;
 import cc.zjlsx.manhunt.utils.Color;
 import lombok.Getter;
@@ -28,15 +29,14 @@ public class GameTick extends BukkitRunnable {
 
         currentSecond += 1;
 
-        gameManager.getPlayerManager().getInGamePlayers().forEach(player -> player.gameTick(currentSecond));
-
+        gameManager.getPlayerManager().getGamePlayers().forEach(player -> player.gameTick(currentSecond));
 
         if (currentSecond == configManager.getPvpOnTime()) {
-            Bukkit.broadcastMessage(Color.str("&cPVP已开启！"));
-        }
-        if (currentSecond == configManager.getGameEndTime()) {
-            gameManager.endGame(Team.Spectator);
+            Bukkit.broadcastMessage(Color.s("&cPVP已开启！"));
         }
 
+        if (currentSecond == configManager.getGameEndTime() && !gameManager.isAtAnyState(GameState.End, GameState.Reset)) {
+            gameManager.endGame(Team.Spectator);
+        }
     }
 }

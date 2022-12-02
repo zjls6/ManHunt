@@ -1,6 +1,4 @@
-package cc.zjlsx.manhunt.models;
-
-import java.util.List;
+package cc.zjlsx.manhunt.models.base;
 
 public interface IGamePlayer {
     void setPlaying();

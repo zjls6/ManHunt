@@ -1,5 +1,6 @@
 package cc.zjlsx.manhunt.command.base;
 
+import cc.zjlsx.manhunt.Main;
 import cc.zjlsx.manhunt.enums.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -10,11 +11,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.Objects;
 
 public abstract class BaseCommand implements CommandExecutor {
-    public final JavaPlugin plugin;
+    public final Main plugin;
     private final CommandInfo commandInfo;
 
     public BaseCommand(JavaPlugin plugin) {
-        this.plugin = plugin;
+        this.plugin = (Main) plugin;
         this.commandInfo = getClass().getDeclaredAnnotation(CommandInfo.class);
         Objects.requireNonNull(commandInfo, "未找到该命令的信息");
     }
@@ -27,13 +28,13 @@ public abstract class BaseCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!commandInfo.permission().getPermission().isEmpty()) {
             if (!sender.hasPermission(commandInfo.permission().getPermission())) {
-                sender.sendMessage(Messages.No_Permission.get());
+                plugin.audience(sender).sendMessage(Messages.No_Permission.get());
                 return true;
             }
         }
         if (commandInfo.requiresPlayer()) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage(Messages.Run_In_Console.get());
+                plugin.audience(sender).sendMessage(Messages.Run_In_Console.get());
                 return true;
             }
             execute((Player) sender, args);

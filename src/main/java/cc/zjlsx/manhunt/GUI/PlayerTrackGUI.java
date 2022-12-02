@@ -31,7 +31,7 @@ public class PlayerTrackGUI implements Listener {
 
     public void open(Player p) {
 
-        inventory = Bukkit.createInventory(null, 9, Color.str(gameManager.getMessages().getString("menu.playerTrack")));
+        inventory = Bukkit.createInventory(null, 9, Color.s(gameManager.getMessages().getString("menu.playerTrack")));
 
         List<UUID> hunters = gameManager.getPlayerManager().getHunters();
         List<UUID> runners = gameManager.getPlayerManager().getRunners();
@@ -60,7 +60,7 @@ public class PlayerTrackGUI implements Listener {
     @EventHandler
     public void onClick(InventoryClickEvent e) {
         Player p = (Player) e.getWhoClicked();
-        if (!e.getView().getTitle().contains(Color.str(gameManager.getMessages().getString("menu.playerTrack")))) {
+        if (!e.getView().getTitle().contains(Color.s(gameManager.getMessages().getString("menu.playerTrack")))) {
             return;
         }
         if (e.getCurrentItem() == null) {
@@ -81,7 +81,7 @@ public class PlayerTrackGUI implements Listener {
         }
         OfflinePlayer offlinePlayer = skull.getOwningPlayer();
         if (!offlinePlayer.isOnline()) {
-            p.sendMessage(Color.str(gameManager.getMessages().getString("playerNotOnline")));
+            p.sendMessage(Color.s(gameManager.getMessages().getString("playerNotOnline")));
             return;
         }
         Player player = offlinePlayer.getPlayer();

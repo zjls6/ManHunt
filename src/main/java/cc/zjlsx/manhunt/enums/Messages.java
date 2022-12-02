@@ -1,5 +1,7 @@
 package cc.zjlsx.manhunt.enums;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.ChatColor;
 
 public enum Messages {
@@ -37,6 +39,7 @@ public enum Messages {
     Reload_Plugin("%prefix%&a插件配置重载成功");
 
     private final String configPath;
+    private final MiniMessage miniMessage = MiniMessage.miniMessage();
     private String message;
 
     Messages(String message) {
@@ -57,16 +60,32 @@ public enum Messages {
         return configPath;
     }
 
-    public String get() {
+    public String getMessage() {
         return message;
-    }
-
-    public String get(int time) {
-        return message.replace("%time%", String.valueOf(time));
     }
 
     public void setMessage(String message) {
         this.message = format(message);
+    }
+
+    public String getMessage(int time) {
+        return message.replace("%time%", String.valueOf(time));
+    }
+
+    public String getMessage(Object... placeholders) {
+        String finalMessage = message;
+        for (int i = 0; i < placeholders.length; i += 2) {
+            finalMessage = finalMessage.replace("%" + placeholders[i] + "%", String.valueOf(placeholders[i + 1]));
+        }
+        return finalMessage;
+    }
+
+    public Component get() {
+        return miniMessage.deserialize(message);
+    }
+
+    public Component get(Object... placeholders) {
+        return miniMessage.deserialize(getMessage(placeholders));
     }
 
 

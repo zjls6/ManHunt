@@ -1,5 +1,6 @@
 hunters: 2
 runners: 1
+spectators: 0
 
 #游戏开始后猎人释放时间(单位：秒)
 hunterRelease: 30
@@ -7,3 +8,5 @@ hunterRelease: 30
 pvpOn: 120
 #游戏结束的时间(单位：秒)[需要大于PVP开启的时间]
 gameEnd: 3600
+#世界边界大小
+worldBorderSize: 2000

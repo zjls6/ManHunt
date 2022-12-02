@@ -95,7 +95,7 @@ public class ItemBuilder {
      */
     public ItemBuilder setName(String name) {
         ItemMeta im = is.getItemMeta();
-        im.setDisplayName(cc.zjlsx.manhunt.utils.Color.str(name));
+        im.setDisplayName(cc.zjlsx.manhunt.utils.Color.s(name));
         is.setItemMeta(im);
         return this;
     }
@@ -183,7 +183,7 @@ public class ItemBuilder {
      */
     public ItemBuilder setLore(String... lore) {
         ItemMeta im = is.getItemMeta();
-        im.setLore(Arrays.stream(lore).map(cc.zjlsx.manhunt.utils.Color::str).collect(Collectors.toList()));
+        im.setLore(Arrays.stream(lore).map(cc.zjlsx.manhunt.utils.Color::s).collect(Collectors.toList()));
         is.setItemMeta(im);
         return this;
     }
@@ -195,7 +195,7 @@ public class ItemBuilder {
      */
     public ItemBuilder setLore(List<String> lore) {
         ItemMeta im = is.getItemMeta();
-        im.setLore(lore.stream().map(cc.zjlsx.manhunt.utils.Color::str).collect(Collectors.toList()));
+        im.setLore(lore.stream().map(cc.zjlsx.manhunt.utils.Color::s).collect(Collectors.toList()));
         is.setItemMeta(im);
         return this;
     }

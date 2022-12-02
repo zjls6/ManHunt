@@ -22,7 +22,7 @@ public class GameStarting extends BukkitRunnable {
 
     public GameStarting(GameManager gameManager) {
         this.gameManager = gameManager;
-        this.bossBar = Bukkit.createBossBar(Color.str("&a游戏将在 &6&l" + time + " &a秒内开始"), BarColor.PURPLE, BarStyle.SEGMENTED_20);
+        this.bossBar = Bukkit.createBossBar(Color.s("&a游戏将在 &6&l" + time + " &a秒内开始"), BarColor.PURPLE, BarStyle.SEGMENTED_20);
         this.bossBar.setProgress(1.0);
         for (Player p : Bukkit.getOnlinePlayers()) {
             this.bossBar.addPlayer(p);
@@ -40,7 +40,7 @@ public class GameStarting extends BukkitRunnable {
         }
 
         this.bossBar.setProgress(time / 20.0f);
-        this.bossBar.setTitle(Color.str("&a游戏将在 &6&l" + time + " &a秒内开始"));
+        this.bossBar.setTitle(Color.s("&a游戏将在 &6&l" + time + " &a秒内开始"));
 
 
         if (time <= 10 || time == 20) {
@@ -48,16 +48,16 @@ public class GameStarting extends BukkitRunnable {
                 time--;
                 return;
             }
-            Bukkit.broadcastMessage(Color.str("&a游戏将在 &6&l" + time + " &a秒内开始"));
+            Bukkit.broadcastMessage(Color.s("&a游戏将在 &6&l" + time + " &a秒内开始"));
             if (time <= 5) {
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_PLING, 1, 1);
                     if (time == 1) {
-                        p.sendTitle("", Color.str("&c") + time, 20, 20, 0);
+                        p.sendTitle("", Color.s("&c") + time, 20, 20, 0);
                     } else if (time <= 3) {
-                        p.sendTitle("", Color.str("&c") + time, 20, 20, 0);
+                        p.sendTitle("", Color.s("&c") + time, 20, 20, 0);
                     } else {
-                        p.sendTitle("", Color.str("&e") + time, 20, 20, 20);
+                        p.sendTitle("", Color.s("&e") + time, 20, 20, 20);
                     }
 
                 }

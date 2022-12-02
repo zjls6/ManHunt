@@ -1,10 +1,15 @@
 package cc.zjlsx.manhunt.GUI;
 
+import cc.zjlsx.manhunt.enums.Messages;
 import cc.zjlsx.manhunt.games.GameManager;
 import cc.zjlsx.manhunt.games.GameState;
 import cc.zjlsx.manhunt.player.PlayerManager;
 import cc.zjlsx.manhunt.utils.Color;
 import cc.zjlsx.manhunt.utils.ItemBuilder;
+import net.kyori.adventure.chat.ChatType;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -29,13 +34,13 @@ public class TeamPickerGUI implements Listener {
 
     public void open(Player p) {
 
-        inventory = Bukkit.createInventory(null, 9, Color.str(gameManager.getMessages().getString("menu.chooseTeam")));
+        inventory = Bukkit.createInventory(null, 9, Color.s(gameManager.getMessages().getString("menu.chooseTeam")));
 
         List<UUID> hunters = gameManager.getPlayerManager().getHunters();
         List<UUID> runners = gameManager.getPlayerManager().getRunners();
 
         if (hunters.isEmpty()) {
-            inventory.setItem(3, new ItemBuilder(Material.GOLDEN_SWORD).setName(gameManager.getMessages().getString("names.hunter")).hideAttributes().toItemStack());
+            inventory.setItem(3, new ItemBuilder(Material.GOLDEN_SWORD).setName(Messages.Hunter_Name.getMessage()).hideAttributes().toItemStack());
         } else {
             List<String> playerNames = new ArrayList<>();
             playerNames.add(gameManager.getMessages().getString("menu.teamPlayers.top"));
@@ -67,13 +72,14 @@ public class TeamPickerGUI implements Listener {
                 inventory.setItem(5, new ItemBuilder(Material.FEATHER).setName(gameManager.getMessages().getString("names.runner")).setLore(playerNames).toItemStack());
             }
         }
+
         p.openInventory(inventory);
     }
 
     @EventHandler
     public void onClick(InventoryClickEvent e) {
-        Player p = (Player) e.getWhoClicked();
-        if (!e.getView().getTitle().contains(Color.str(gameManager.getMessages().getString("menu.chooseTeam")))) {
+        Player player = (Player) e.getWhoClicked();
+        if (!e.getView().getTitle().contains(Color.s(gameManager.getMessages().getString("menu.chooseTeam")))) {
             return;
         }
         if (e.getCurrentItem() == null) {
@@ -88,41 +94,40 @@ public class TeamPickerGUI implements Listener {
             List<UUID> hunters = playerManager.getHunters();
             List<UUID> runners = playerManager.getRunners();
             switch (slot) {
-                case 3:
-                    if (hunters.contains(p.getUniqueId())) {
-                        p.sendMessage(Color.str(gameManager.getMessages().getString("join.hunter.alreadyIn")));
-                        p.closeInventory();
+                case 3 -> {
+                    if (hunters.contains(player.getUniqueId())) {
+
+                        player.sendMessage(Color.s(gameManager.getMessages().getString("join.hunter.alreadyIn")));
+                        player.closeInventory();
                         return;
                     }
                     if (hunters.size() == playerManager.getMaxHunter()) {
-                        p.sendMessage(Color.str(gameManager.getMessages().getString("join.hunter.full")));
-                        p.closeInventory();
+                        player.sendMessage(Color.s(gameManager.getMessages().getString("join.hunter.full")));
+                        player.closeInventory();
                         return;
                     }
-                    runners.remove(p.getUniqueId());
-                    hunters.add(p.getUniqueId());
-                    p.sendMessage(Color.str(gameManager.getMessages().getString("join.hunter.success")));
-                    p.closeInventory();
-                    break;
-                case 5:
-                    if (runners.contains(p.getUniqueId())) {
-                        p.sendMessage(Color.str(gameManager.getMessages().getString("join.runner.alreadyIn")));
-                        p.closeInventory();
+                    runners.remove(player.getUniqueId());
+                    hunters.add(player.getUniqueId());
+                    player.sendMessage(Color.s(gameManager.getMessages().getString("join.hunter.success")));
+                    player.closeInventory();
+                }
+                case 5 -> {
+                    if (runners.contains(player.getUniqueId())) {
+                        player.sendMessage(Color.s(gameManager.getMessages().getString("join.runner.alreadyIn")));
+                        player.closeInventory();
                         return;
                     }
                     if (runners.size() == playerManager.getMaxRunner()) {
-                        p.sendMessage(Color.str(gameManager.getMessages().getString("join.runner.full")));
-                        p.closeInventory();
+                        player.sendMessage(Color.s(gameManager.getMessages().getString("join.runner.full")));
+                        player.closeInventory();
                         return;
                     }
-                    hunters.remove(p.getUniqueId());
-                    runners.add(p.getUniqueId());
-                    p.sendMessage(Color.str(gameManager.getMessages().getString("join.runner.success")));
-                    p.closeInventory();
-                    break;
-                default:
-                    e.setCancelled(true);
-                    break;
+                    hunters.remove(player.getUniqueId());
+                    runners.add(player.getUniqueId());
+                    player.sendMessage(Color.s(gameManager.getMessages().getString("join.runner.success")));
+                    player.closeInventory();
+                }
+                default -> e.setCancelled(true);
             }
         }
     }

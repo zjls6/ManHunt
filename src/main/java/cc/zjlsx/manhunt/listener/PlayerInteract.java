@@ -2,6 +2,7 @@ package cc.zjlsx.manhunt.listener;
 
 import cc.zjlsx.manhunt.GUI.PlayerTrackGUI;
 import cc.zjlsx.manhunt.GUI.TeamPickerGUI;
+import cc.zjlsx.manhunt.Main;
 import cc.zjlsx.manhunt.games.GameManager;
 import cc.zjlsx.manhunt.games.GameState;
 import cc.zjlsx.manhunt.utils.Color;
@@ -20,10 +21,10 @@ import java.util.UUID;
 
 public class PlayerInteract implements Listener {
 
-    private GameManager gameManager;
+    private final GameManager gameManager;
 
-    public PlayerInteract(GameManager gameManager) {
-        this.gameManager = gameManager;
+    public PlayerInteract(Main plugin) {
+        this.gameManager = plugin.getGameManager();
     }
 
     @EventHandler
@@ -56,7 +57,7 @@ public class PlayerInteract implements Listener {
 //                    return;
 //                }
 //
-//                Player player1 = player.get();
+//                Player player1 = player.getMessage();
 //
 //                UUID uuid = playerTracker.getOrDefault(p.getUniqueId(), player1.getUniqueId());
 //                Player trackPlayer = Bukkit.getPlayer(uuid);
@@ -67,10 +68,10 @@ public class PlayerInteract implements Listener {
 //                if (!optionalPlayer.isPresent()) {
 //                    return;
 //                }
-//                Player player2 = optionalPlayer.get();
+//                Player player2 = optionalPlayer.getMessage();
                 new PlayerTrackGUI(gameManager).open(p);
                 UUID uuid = gameManager.getPlayerManager().getRunners().get(0);
-                TextComponent textComponent = new TextComponent(Color.str("&a追踪&7： &e" + Bukkit.getPlayer(uuid).getName()+"  &b"+(int) Math.round(p.getLocation().distance(Bukkit.getPlayer(uuid).getLocation())) + "m"));
+                TextComponent textComponent = new TextComponent(Color.s("&a追踪&7： &e" + Bukkit.getPlayer(uuid).getName()+"  &b"+(int) Math.round(p.getLocation().distance(Bukkit.getPlayer(uuid).getLocation())) + "m"));
                 p.spigot().sendMessage(ChatMessageType.ACTION_BAR,textComponent);
             }
         }
